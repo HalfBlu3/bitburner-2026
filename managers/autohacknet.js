@@ -5,7 +5,13 @@ export async function main(ns) {
   var maxRam = 64;
   var maxCores = 16;
   var text = ns.args.includes("-v") ? true : false;
-  ns.tprint("running autohacknet "+(text?"verbose":"silent"));
+  ns.tprint("running autohacknet " + (text ? "verbose" : "silent"));
+  while (ns.hacknet.numNodes() == 0) {
+    if (ns.hacknet.getPurchaseNodeCost() < ns.getServerMoneyAvailable("home")) {
+      ns.tprint("purchased node " + ns.hacknet.purchaseNode());
+    }
+    await ns.sleep(10);
+  }
   while (true) {
     for (var i = 0; i < ns.hacknet.numNodes(); i++) {
       //LEVEL
