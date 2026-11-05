@@ -49,6 +49,18 @@ export async function getServerList(ns) {
   return out;
 }
 
+export async function path(ns, serv){
+  const servers = await getRawServerList(ns);
+  const index = servers.findIndex(s => s.getName() === serv);
+  var string = "connect " + servers[index].getName();
+  var mem = servers[index].getName();
+  for (var i=0; i<servers[index].getDepth(); i++){
+    mem = ns.scan(mem)[0];
+    string = "connect " + mem + "; " + string
+  }
+  return string;
+}
+
 export async function showMap(ns) {
   //for the love of christ do not use, unfixed code from person repo
   var finish = await getRawServerList(ns);
