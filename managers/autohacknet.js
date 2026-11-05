@@ -7,8 +7,10 @@ export async function main(ns) {
   var text = ns.args.includes("-v") ? true : false;
   ns.tprint("running autohacknet " + (text ? "verbose" : "silent"));
   while (ns.hacknet.numNodes() == 0) {
-    if (ns.hacknet.getPurchaseNodeCost() < ns.getServerMoneyAvailable("home")) {
+    if (text) {
       ns.tprint("purchased node " + ns.hacknet.purchaseNode());
+    } else {
+      ns.hacknet.purchaseNode()
     }
     await ns.sleep(10);
   }
@@ -72,7 +74,11 @@ export async function main(ns) {
       }
       //nodes
       if (ns.hacknet.getPurchaseNodeCost() < ns.getServerMoneyAvailable("home")) {
-        ns.tprint("purchased node " + ns.hacknet.purchaseNode());
+        if (text) {
+          ns.tprint("purchased node " + ns.hacknet.purchaseNode());
+        } else {
+          ns.hacknet.purchaseNode()
+        }
       }
       await ns.sleep(1);
     }
