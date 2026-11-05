@@ -71,7 +71,7 @@ export async function showMap(ns) {
     } else if (ns.read("whitelist.txt").split(",").includes(finish[i].getName()) || finish[i].getName().includes("hacknet-server")) {
       ns.tprint(color.white() + s + finish[i].getName());
     } else {
-      if (ns.hasRootAccess(finish[i].getName()) && ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel()) {
+      if (ns.hasRootAccess(finish[i].getName()) /*&& ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel()*/) {
         ns.tprint(color.green() + s + finish[i].getName());
       } else if (!(ns.hasRootAccess(finish[i].getName()) || ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel())) {
         if (hackable(ns.getServerNumPortsRequired(finish[i].getName()))) {
