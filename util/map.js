@@ -53,30 +53,33 @@ export async function showMap(ns) {
   //for the love of christ do not use, unfixed code from person repo
   var finish = await getRawServerList(ns);
   //generates a string with the number of indents we need
-  ns.tprint(color.white()+"|-------------------KEY--------------------|");
-  ns.tprint(color.white()+"|Home server / Whitelisted / Hacknet server|");
-  ns.tprint(color.green()+"|Root access                               |");
-  ns.tprint(color.magenta()+"|Hackable                                  |");
-  ns.tprint(color.yellow()+"|Programs present, but level too low       |");
-  ns.tprint(color.red()+"|Programs missing and level too low        |");
-  ns.tprint(color.cyan()+"|IDFK at this point                        |");
-  ns.tprint("|------------------------------------------|");
+  ns.tprint(color.white() + "|-------------------KEY--------------------|");
+  ns.tprint(color.white() + "|Home server / Whitelisted / Hacknet server|");
+  ns.tprint(color.green() + "|Root access                               |");
+  ns.tprint(color.magenta() + "|Hackable                                  |");
+  ns.tprint(color.yellow() + "|Programs present, but level too low       |");
+  ns.tprint(color.cyan() + "|Programs missing but sufficient level     |");
+  ns.tprint(color.red() + "|Programs missing and level too low        |");
   ns.tprint("");
   ns.tprint("-----Map-----");
   for (var i = 0; i < finish.length; i++) {
     var s = "";
     for (var ii = 0; ii < finish[i].getDepth(); ii++) s += ("|    ");
+    //home
     if (finish[i].getName() == "home") {
       ns.tprint(color.white() + "home");
     } else if (ns.read("whitelist.txt").split(",").includes(finish[i].getName()) || finish[i].getName().includes("hacknet-server")) {
       ns.tprint(color.white() + s + finish[i].getName());
     } else {
-      if (ns.hasRootAccess(finish[i].getName()) /*&& ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel()*/) {
+      //root
+      if (ns.hasRootAccess(finish[i].getName())) {
         ns.tprint(color.green() + s + finish[i].getName());
       } else if (!(ns.hasRootAccess(finish[i].getName()) || ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel())) {
+        //programs no level
         if (hackable(ns.getServerNumPortsRequired(finish[i].getName()))) {
           ns.tprint(color.yellow() + s + finish[i].getName() + " (" + ns.getHackingLevel() + "/" + ns.getServerRequiredHackingLevel(finish[i].getName()) + ")");
         } else {
+          //no level no programs
           var t = "";
           for (var ii = 0; ii < ns.getServerNumPortsRequired(finish[i].getName()); ii++) {
             t += (ns.fileExists(["brutessh.exe", "ftpcrack.exe", "relaysmtp.exe", "httpworm.exe", "sqlinject.exe"][ii], "home") ? "" : (t == "" ? "" : ", ") + ["brutessh.exe", "ftpcrack.exe", "relaysmtp.exe", "httpworm.exe", "sqlinject.exe"][ii]);
@@ -85,8 +88,10 @@ export async function showMap(ns) {
         }
       } else {
         if (ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel()) {
+          //hackable
           ns.tprint(color.magenta() + s + finish[i].getName());
         } else {
+          //programs but no level
           ns.tprint(color.cyan() + s + finish[i].getName() + " (" + ns.getHackingLevel() + "/" + ns.getServerRequiredHackingLevel(finish[i].getName()) + ")");
         }
       }
