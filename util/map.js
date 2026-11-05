@@ -74,7 +74,7 @@ export async function showMap(ns) {
       //root
       if (ns.hasRootAccess(finish[i].getName())) {
         ns.tprint(color.green() + s + finish[i].getName());
-      } else if (!(ns.hasRootAccess(finish[i].getName()) || ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel())) {
+      } else if (ns.getServerRequiredHackingLevel(finish[i].getName()) > ns.getHackingLevel()) {
         //programs no level
         if (hackable(ns.getServerNumPortsRequired(finish[i].getName()))) {
           ns.tprint(color.yellow() + s + finish[i].getName() + " (" + ns.getHackingLevel() + "/" + ns.getServerRequiredHackingLevel(finish[i].getName()) + ")");
@@ -87,12 +87,17 @@ export async function showMap(ns) {
           ns.tprint(color.red() + s + finish[i].getName() + " (" + t + ", " + ns.getHackingLevel() + "/" + ns.getServerRequiredHackingLevel(finish[i].getName()) + ")");
         }
       } else {
-        if (ns.getServerRequiredHackingLevel(finish[i].getName()) <= ns.getHackingLevel()) {
+        //SUFFICIENT LEVEL
+        if (hackable(ns.getServerNumPortsRequired(finish[i].getName()))) {
           //hackable
           ns.tprint(color.magenta() + s + finish[i].getName());
         } else {
           //programs but no level
-          ns.tprint(color.cyan() + s + finish[i].getName() + " (" + ns.getHackingLevel() + "/" + ns.getServerRequiredHackingLevel(finish[i].getName()) + ")");
+          var t = "";
+          for (var ii = 0; ii < ns.getServerNumPortsRequired(finish[i].getName()); ii++) {
+            t += (ns.fileExists(["brutessh.exe", "ftpcrack.exe", "relaysmtp.exe", "httpworm.exe", "sqlinject.exe"][ii], "home") ? "" : (t == "" ? "" : ", ") + ["brutessh.exe", "ftpcrack.exe", "relaysmtp.exe", "httpworm.exe", "sqlinject.exe"][ii]);
+          }
+          ns.tprint(color.cyan() + s + finish[i].getName() + " (" + t + ")");
         }
       }
     }
